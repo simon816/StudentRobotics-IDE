@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="SRPlugin" default="make-jar" basedir=".">
+
+	<description>Student Robotics Plugin</description>
+
+
+	<!-- Set global properties for this build. -->
+	<property name="app-name-small" value="sr_plugin" />
+	<property name="version" value="0.0.1" />
+	<property name="source-dir" location="src" />
+	<property name="class-dir" location="bin" />
+	<property name="dist-dir" location="dist" />
+	<property name="debug" value="true" />
+	<property name="debuglevel" value="lines,vars,source" />
+	<property name="java-level" value="1.7" />
+	<property file="build.properties" />
+
+	<target name="compile-classes" description="Compile source code">
+		<echo>Compiling code</echo>
+		<javac srcdir="${source-dir}" destdir="${class-dir}" deprecation="yes" includeantruntime="false" debug="${debug}" debuglevel="${debuglevel}" executable="${javac.17}" source="${java-level}" target="${java-level}">
+			<include name="**" />
+			<exclude name="*Test**" />
+			<classpath>
+				<fileset dir="../RText/lib">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+
+	<target name="make-jar" depends="compile-classes" description="Makes the jar file">
+
+		<delete file="${dist-dir}/SRPlugin.jar" />
+
+		<jar destfile="${dist-dir}/SRPlugin.jar">
+			<fileset dir="${class-dir}">
+				<include name="**" />
+			</fileset>
+			<fileset dir="${source-dir}">
+				<exclude name="**.java" />
+			</fileset>
+			<manifest>
+				<attribute name="Fife-Plugin-Class" value="com.simon816.rtext.srplugin.Plugin" />
+				<attribute name="Fife-Plugin-Load-Priority" value="highest" />
+			</manifest>
+		</jar>
+		<copy file="${dist-dir}/SRPlugin.jar" tofile="../RText/dist/plugins/SRPlugin.jar" />
+		<copy file="json.jar" tofile="../RText/dist/plugins/json.jar" />
+	</target>
+</project>
